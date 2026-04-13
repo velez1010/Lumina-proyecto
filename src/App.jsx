@@ -7,6 +7,7 @@ import Footer from './subcomponents/Footer';
 import Nosotros from './pages/Nosotros';
 import Contacto from './pages/Contacto';
 import Experiencias from './pages/Experiencias';
+import PanelAdmin from './pages/PanelAdmin';
 
 
 import './App.css';
@@ -26,6 +27,7 @@ function App() {
           <Route path="/nosotros" element={<Nosotros />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/experiencias" element={<Experiencias />} />
+          <Route path="/panel-admin" element={<PanelAdmin />} />
         </Routes>
       </main>
       <Footer />

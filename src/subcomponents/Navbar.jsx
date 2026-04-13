@@ -45,7 +45,14 @@ export default function Navbar() {
       </div>
 
       <div className="nav-actions">
-        <button className="btn-primary">Iniciar Sesión</button>
+        <Link to="/panel-admin">
+          <button className="btn-primary">Panel Admin</button>
+        </Link>
+      </div>
+
+
+
+      <div className="nav-actions">        <button className="btn-primary">Iniciar Sesión</button>
       </div>
     </nav>
   );
