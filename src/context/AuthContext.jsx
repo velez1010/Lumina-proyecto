@@ -1,11 +1,10 @@
-import React, { createContext, useState, useEffect, useState, use } from 'react';
-import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword , signOut } from "firebase/auth";
-
-import { app } from '../services/firebase/FirebaseConfig';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth } from '../services/firebase/FirebaseConfig';
 
 const AuthContext = createContext();
 
-export const UseAuth = () => {
+export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) {
         throw new Error("useAuth debe ser usado dentro de AuthProvider");
@@ -18,11 +17,11 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     const register = (email, password) => {
-        return createUserWithEmailAndPassword(app, email, password);
+        return createUserWithEmailAndPassword(auth, email, password);
     };
 
     const login = (email, password) => {
-        return signInWithEmailAndPassword(app, email, password);
+        return signInWithEmailAndPassword(auth, email, password);
     };
 
     const logout = () => {

@@ -8,6 +8,9 @@ import Nosotros from './pages/Nosotros';
 import Contacto from './pages/Contacto';
 import Experiencias from './pages/Experiencias';
 import PanelAdmin from './pages/PanelAdmin';
+import  Login  from './components/auth/Login';
+import { AuthProvider } from './context/AuthContext';
+import Register from './components/auth/Register';
 
 
 import './App.css';
@@ -16,22 +19,26 @@ import LuminaPage from './pages/LuminaPage';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <SearchBar />
-      <main className="app-content">
-        <Routes>
-          <Route path="/" element={<Welcome />} />
-          <Route path="/lumina" element={<LuminaPage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/nosotros" element={<Nosotros />} />
-          <Route path="/contacto" element={<Contacto />} />
-          <Route path="/experiencias" element={<Experiencias />} />
-          <Route path="/panel-admin" element={<PanelAdmin />} />
-        </Routes>
-      </main>
-      <Footer />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
+        <SearchBar />
+        <main className="app-content">
+          <Routes>
+            <Route path="/" element={<Welcome />} />
+            <Route path="/lumina" element={<LuminaPage />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/nosotros" element={<Nosotros />} />
+            <Route path="/contacto" element={<Contacto />} />
+            <Route path="/experiencias" element={<Experiencias />} />
+            <Route path="/panel-admin" element={<PanelAdmin />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} /> 
+          </Routes>
+        </main>
+        <Footer />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
