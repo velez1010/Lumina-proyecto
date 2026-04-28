@@ -3,6 +3,7 @@ import '../styles/PanelAdmin.css';
 
 export default function PanelAdmin() {
   const [trabajadores, setTrabajadores] = useState([]);
+  const [idCounter, setIdCounter] = useState(1);
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -47,10 +48,11 @@ export default function PanelAdmin() {
       return;
     }
     const nuevoTrabajador = {
-      id: Date.now(),
+      id: idCounter,
       ...formData
     };
     setTrabajadores([...trabajadores, nuevoTrabajador]);
+    setIdCounter(idCounter + 1);
     handleLimpiar();
     alert('✅ ¡Trabajador agregado exitosamente!');
   };

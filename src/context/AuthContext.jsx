@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
-        return signOut(app);
+        return signOut(auth);
     };
 
     useEffect(() => {

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 
-export default function Navbar() {
+export default function Navbar({ searchTerm = '', onSearchChange = () => {}, onSearchSubmit = () => {} }) {
   return (
     <nav className="navbar">
       <div className="logo-container">
@@ -17,8 +17,12 @@ export default function Navbar() {
           type="text"
           placeholder="Buscar experiencias..."
           className="search-input"
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
         />
-        <button className="btn-secondary">Buscar</button>
+        <button className="btn-secondary" type="button" onClick={onSearchSubmit}>
+          Buscar
+        </button>
       </div>
 
         <div className="nav-actions">

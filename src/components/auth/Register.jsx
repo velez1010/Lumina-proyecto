@@ -38,34 +38,45 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h2>Crear Cuenta</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Confirmar contraseña"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Registrarse</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-      </form>
-      <p>¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link></p>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">Crear Cuenta</h2>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="auth-input-group">
+            <input
+              className="auth-input"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="auth-input-group">
+            <input
+              className="auth-input"
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="auth-input-group">
+            <input
+              className="auth-input"
+              type="password"
+              placeholder="Confirmar contraseña"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button className="auth-button" type="submit">Registrarse</button>
+          {error && <p className="auth-error">{error}</p>}
+        </form>
+        <Link className="auth-link" to="/login">¿Ya tienes cuenta? Inicia sesión</Link>
+      </div>
     </div>
   );
 };

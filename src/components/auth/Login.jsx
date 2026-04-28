@@ -28,27 +28,35 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Entrar</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-      </form>
-      <p>¿No tienes cuenta? <Link to="/register">Regístrate</Link></p>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">Iniciar Sesión</h2>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="auth-input-group">
+            <input
+              className="auth-input"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="auth-input-group">
+            <input
+              className="auth-input"
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button className="auth-button" type="submit">Entrar</button>
+          {error && <p className="auth-error">{error}</p>}
+        </form>
+        <Link className="auth-link" to="/register">¿No tienes cuenta? Regístrate</Link>
+      </div>
     </div>
   );
 };

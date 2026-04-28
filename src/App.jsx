@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './subcomponents/Navbar';
 import Welcome from './pages/Welcome';
 import Profile from './pages/Profile';
@@ -18,27 +18,62 @@ import SearchBar from './subcomponents/SearchBar';
 import LuminaPage from './pages/LuminaPage';
 
 function App() {
+  const [searchTerm, setSearchTerm] = useState('');
+
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Navbar />
-        <SearchBar />
-        <main className="app-content">
-          <Routes>
-            <Route path="/" element={<Welcome />} />
-            <Route path="/lumina" element={<LuminaPage />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/nosotros" element={<Nosotros />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/experiencias" element={<Experiencias />} />
-            <Route path="/panel-admin" element={<PanelAdmin />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} /> 
-          </Routes>
-        </main>
-        <Footer />
+        <AppRoutes
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+        />
       </BrowserRouter>
     </AuthProvider>
+  );
+}
+
+function AppRoutes({ searchTerm, setSearchTerm }) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      navigate('/');
+    }
+  }, [searchTerm, navigate]);
+
+  const handleSearchSubmit = () => {
+    if (searchTerm.trim()) {
+      navigate('/');
+    }
+  };
+
+  return (
+    <>
+      <Navbar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        onSearchSubmit={handleSearchSubmit}
+      />
+      <SearchBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        onSearchSubmit={handleSearchSubmit}
+      />
+      <main className="app-content">
+        <Routes>
+          <Route path="/" element={<Welcome searchTerm={searchTerm} />} />
+          <Route path="/lumina" element={<LuminaPage searchTerm={searchTerm} />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/nosotros" element={<Nosotros />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="/experiencias" element={<Experiencias />} />
+          <Route path="/panel-admin" element={<PanelAdmin />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} /> 
+        </Routes>
+      </main>
+      <Footer />
+    </>
   );
 }
 

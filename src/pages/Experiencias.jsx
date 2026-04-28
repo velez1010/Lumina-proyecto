@@ -5,6 +5,25 @@ const Experiencias = () => {
   const [mensaje, setMensaje] = useState("");
   const [feedback, setFeedback] = useState({ texto: "", tipo: "" });
 
+  const getExperienciasStorage = () => {
+    try {
+      return JSON.parse(localStorage.getItem('lumina_experiencias') || '[]');
+    } catch {
+      return [];
+    }
+  };
+
+  const guardarExperienciaStorage = (experiencia) => {
+    const experiencias = getExperienciasStorage();
+    experiencias.unshift({
+      ...experiencia,
+      likes: [],
+      dislikes: [],
+      comments: [],
+    });
+    localStorage.setItem('lumina_experiencias', JSON.stringify(experiencias));
+  };
+
   const validarMensaje = () => {
     if (!titulo.trim()) {
       setFeedback({
@@ -38,8 +57,19 @@ const Experiencias = () => {
       return;
     }
 
-    setFeedback({ texto: "Experiencia publicada correctamente.", tipo: "success" });
+    const experiencia = {
+      id: Date.now(),
+      titulo: titulo.trim(),
+      mensaje: mensaje.trim(),
+      fechaPublicacion: new Date().toISOString(),
+      author: 'Anónimo',
+      likes: [],
+      dislikes: [],
+      comments: [],
+    };
 
+    guardarExperienciaStorage(experiencia);
+    setFeedback({ texto: "Experiencia publicada correctamente.", tipo: "success" });
     setTitulo("");
     setMensaje("");
   };

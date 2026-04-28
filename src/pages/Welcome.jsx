@@ -1,7 +1,7 @@
 import React from 'react'
 import LuminaPage from './LuminaPage';
 
-export default function Welcome() {
+export default function Welcome({ searchTerm = '' }) {
   return (
     <>
       <section className="hero">
@@ -10,7 +10,7 @@ export default function Welcome() {
           Preserva tus recuerdos y revive tus experiencias.
         </p>
       </section>
-      <LuminaPage />
+      <LuminaPage searchTerm={searchTerm} />
     </>
   )
 }
