@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from '../services/firebase/FirebaseConfig';
+import { collection, query, where, getDocs, setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { auth, db } from '../services/firebase/FirebaseConfig';
 
 const AuthContext = createContext();
 
@@ -16,12 +17,49 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(undefined);
     const [loading, setLoading] = useState(true);
 
-    const register = (email, password) => {
-        return createUserWithEmailAndPassword(auth, email, password);
+    const getUserDocByUsername = async (username) => {
+        const normalized = username.trim().toLowerCase();
+        const usersRef = collection(db, 'usuarios');
+        const usernameQuery = query(usersRef, where('usernameLower', '==', normalized));
+        const querySnapshot = await getDocs(usernameQuery);
+        return querySnapshot.docs.length > 0 ? querySnapshot.docs[0].data() : null;
     };
 
-    const login = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password);
+    const register = async (email, password, username) => {
+        const normalized = username.trim().toLowerCase();
+        const usernameExists = await getUserDocByUsername(normalized);
+
+        if (usernameExists) {
+            const error = new Error('El nombre de usuario ya está en uso.');
+            error.code = 'auth/username-already-in-use';
+            throw error;
+        }
+
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, 'usuarios', userCredential.user.uid), {
+            uid: userCredential.user.uid,
+            email,
+            username: username.trim(),
+            usernameLower: normalized,
+            createdAt: serverTimestamp(),
+        });
+        return userCredential;
+    };
+
+    const login = async (email, password, username) => {
+        let loginEmail = email;
+
+        if (!loginEmail && username) {
+            const userDoc = await getUserDocByUsername(username);
+            if (!userDoc) {
+                const error = new Error('Usuario no encontrado.');
+                error.code = 'auth/user-not-found';
+                throw error;
+            }
+            loginEmail = userDoc.email;
+        }
+
+        return signInWithEmailAndPassword(auth, loginEmail, password);
     };
 
     const logout = () => {

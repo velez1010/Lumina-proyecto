@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 
-export default function Navbar({ searchTerm = '', onSearchChange = () => {}, onSearchSubmit = () => {} }) {
+export default function Navbar({ searchTerm = '', onSearchChange = () => {}, onSearchSubmit = () => {}, onLoginClick = () => {}, onRegisterClick = () => {} }) {
   return (
     <nav className="navbar">
       <div className="logo-container">
@@ -55,12 +55,8 @@ export default function Navbar({ searchTerm = '', onSearchChange = () => {}, onS
         </Link>
       </div>
 
-
-
       <div className="nav-actions">        
-        <Link to="/login">
-          <button className="btn-primary">Iniciar Sesión</button>
-        </Link>
+        <button className="btn-primary" onClick={onLoginClick}>Iniciar Sesión</button>
       </div>
     </nav>
   );

@@ -19,6 +19,8 @@ import LuminaPage from './pages/LuminaPage';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   return (
     <AuthProvider>
@@ -26,13 +28,17 @@ function App() {
         <AppRoutes
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
+          showLoginModal={showLoginModal}
+          setShowLoginModal={setShowLoginModal}
+          showRegisterModal={showRegisterModal}
+          setShowRegisterModal={setShowRegisterModal}
         />
       </BrowserRouter>
     </AuthProvider>
   );
 }
 
-function AppRoutes({ searchTerm, setSearchTerm }) {
+function AppRoutes({ searchTerm, setSearchTerm, showLoginModal, setShowLoginModal, showRegisterModal, setShowRegisterModal }) {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,6 +59,8 @@ function AppRoutes({ searchTerm, setSearchTerm }) {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onSearchSubmit={handleSearchSubmit}
+        onLoginClick={() => setShowLoginModal(true)}
+        onRegisterClick={() => setShowRegisterModal(true)}
       />
       <SearchBar
         searchTerm={searchTerm}
@@ -68,11 +76,16 @@ function AppRoutes({ searchTerm, setSearchTerm }) {
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/experiencias" element={<Experiencias />} />
           <Route path="/panel-admin" element={<PanelAdmin />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} /> 
         </Routes>
       </main>
       <Footer />
+
+      {showLoginModal && (
+        <Login onClose={() => setShowLoginModal(false)} onSwitchToRegister={() => { setShowLoginModal(false); setShowRegisterModal(true); }} />
+      )}
+      {showRegisterModal && (
+        <Register onClose={() => setShowRegisterModal(false)} onSwitchToLogin={() => { setShowRegisterModal(false); setShowLoginModal(true); }} />
+      )}
     </>
   );
 }

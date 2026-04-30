@@ -15,10 +15,11 @@ export default function LuminaPage({ searchTerm = '' }) {
             ...item,
             likes: Array.isArray(item.likes) ? item.likes : [],
             dislikes: Array.isArray(item.dislikes) ? item.dislikes : [],
-            comments: Array.isArray(item.comments) ? item.comments : [],
+            comments: [],
           }))
         : []
       setExperiencias(normalized)
+      localStorage.setItem('lumina_experiencias', JSON.stringify(normalized))
     } catch {
       setExperiencias([])
     }
@@ -82,6 +83,21 @@ export default function LuminaPage({ searchTerm = '' }) {
     setSelectedExperience(updated.find((exp) => exp.id === item.id) || null)
   }
 
+  const handleDeleteComment = (commentId) => {
+    if (!selectedExperience) return
+
+    const updated = experiencias.map((exp) => {
+      if (exp.id !== selectedExperience.id) return exp
+      return {
+        ...exp,
+        comments: (exp.comments || []).filter((comment) => comment.id !== commentId),
+      }
+    })
+
+    saveExperiencias(updated)
+    setSelectedExperience(updated.find((exp) => exp.id === selectedExperience.id) || null)
+  }
+
   const handleCommentSubmit = (e) => {
     e.preventDefault()
     if (!selectedExperience) return
@@ -90,6 +106,7 @@ export default function LuminaPage({ searchTerm = '' }) {
     const comment = {
       id: Date.now(),
       author: currentUser?.email || 'Anónimo',
+      authorId: currentUserId || null,
       texto: commentText.trim(),
       fecha: new Date().toISOString(),
     }
@@ -199,15 +216,33 @@ export default function LuminaPage({ searchTerm = '' }) {
               <h4>Comentarios</h4>
               {selectedExperience.comments?.length > 0 ? (
                 <div className="modal-comments-list">
-                  {selectedExperience.comments.map((comment) => (
-                    <div key={comment.id} className="modal-comment">
-                      <div className="modal-comment-header">
-                        <strong>{comment.author}</strong>
-                        <span>{new Date(comment.fecha).toLocaleString()}</span>
+                  {selectedExperience.comments.map((comment) => {
+                    const canDelete = currentUserId && (comment.authorId === currentUserId || comment.author === currentUser?.email)
+                    return (
+                      <div key={comment.id} className="modal-comment">
+                        <div className="modal-comment-header">
+                          <div>
+                            <strong>{comment.author}</strong>
+                            <span>{new Date(comment.fecha).toLocaleString()}</span>
+                          </div>
+                          {canDelete && (
+                            <button
+                              type="button"
+                              className="comment-delete-btn"
+                              onClick={() => {
+                                if (window.confirm('¿Deseas eliminar este comentario?')) {
+                                  handleDeleteComment(comment.id)
+                                }
+                              }}
+                            >
+                              Eliminar
+                            </button>
+                          )}
+                        </div>
+                        <p>{comment.texto}</p>
                       </div>
-                      <p>{comment.texto}</p>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               ) : (
                 <p className="comments-empty">Sé el primero en comentar esta experiencia.</p>
