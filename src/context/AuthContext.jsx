@@ -67,8 +67,28 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setCurrentUser(user);
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Cargar datos adicionales del usuario desde Firestore
+                try {
+                    const userDoc = await getDocs(query(collection(db, 'usuarios'), where('uid', '==', user.uid)));
+                    if (!userDoc.empty) {
+                        const userData = userDoc.docs[0].data();
+                        // Combinar datos de Firebase Auth con datos de Firestore
+                        setCurrentUser({
+                            ...user,
+                            username: userData.username
+                        });
+                    } else {
+                        setCurrentUser(user);
+                    }
+                } catch (error) {
+                    console.error('Error cargando datos del usuario:', error);
+                    setCurrentUser(user);
+                }
+            } else {
+                setCurrentUser(null);
+            }
             setLoading(false);
         });
 

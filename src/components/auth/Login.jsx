@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; 
 
 
@@ -9,6 +10,7 @@ const Login = ({ onClose = () => {}, onSwitchToRegister = () => {} }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,6 +18,7 @@ const Login = ({ onClose = () => {}, onSwitchToRegister = () => {} }) => {
     try {
       await login(email, password, username);
       onClose();
+      navigate('/');
     } catch (err) {
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential' || err.code === 'auth/username-already-in-use') {
         setError('Credenciales inválidas.');

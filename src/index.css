@@ -118,6 +118,35 @@ body {
   background: linear-gradient(90deg, rgba(0, 217, 255, 0.2), rgba(65, 146, 255, 0.28));
 }
 
+/* USER MENU */
+.user-menu {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.user-btn {
+  background: linear-gradient(90deg, #00ff88, #00d1ff, #1b8cff);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 20px rgba(0, 255, 136, 0.2);
+}
+
+.user-btn:hover {
+  background: linear-gradient(90deg, #00ff88, #00d1ff, #1b8cff);
+  box-shadow: 0 14px 26px rgba(0, 255, 136, 0.3);
+}
+
+.logout-btn {
+  background: linear-gradient(90deg, #ff4444, #ff6666, #ff8888);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  box-shadow: 0 10px 20px rgba(255, 68, 68, 0.2);
+}
+
+.logout-btn:hover {
+  background: linear-gradient(90deg, #ff4444, #ff6666, #ff8888);
+  box-shadow: 0 14px 26px rgba(255, 68, 68, 0.3);
+}
+
 .logo {
   width: 180px;
   height: 100px;

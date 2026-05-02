@@ -1,8 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 
 export default function Navbar({ searchTerm = '', onSearchChange = () => {}, onSearchSubmit = () => {}, onLoginClick = () => {}, onRegisterClick = () => {} }) {
+  const { currentUser, logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
+
   return (
     <nav className="navbar">
       <div className="logo-container">
@@ -55,8 +66,19 @@ export default function Navbar({ searchTerm = '', onSearchChange = () => {}, onS
         </Link>
       </div>
 
-      <div className="nav-actions">        
-        <button className="btn-primary" onClick={onLoginClick}>Iniciar Sesión</button>
+      <div className="nav-actions">
+        {currentUser ? (
+          <div className="user-menu">
+            <button className="btn-primary user-btn">
+              {currentUser.username || currentUser.displayName || currentUser.email?.split('@')[0] || 'Usuario'}
+            </button>
+            <button className="btn-secondary logout-btn" onClick={handleLogout}>
+              Cerrar Sesión
+            </button>
+          </div>
+        ) : (
+          <button className="btn-primary" onClick={onLoginClick}>Iniciar Sesión</button>
+        )}
       </div>
     </nav>
   );

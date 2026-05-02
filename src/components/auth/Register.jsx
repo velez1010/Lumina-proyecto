@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const Register = ({ onClose = () => {}, onSwitchToLogin = () => {} }) => {
@@ -9,6 +10,7 @@ const Register = ({ onClose = () => {}, onSwitchToLogin = () => {} }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const { register } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +29,7 @@ const Register = ({ onClose = () => {}, onSwitchToLogin = () => {} }) => {
     try {
       await register(email, password, username);
       onClose();
+      navigate('/');
     } catch (err) {
       if (err.code === 'auth/email-already-in-use') {
         setError('El correo ya está registrado.');
