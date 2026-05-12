@@ -21,6 +21,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   return (
     <AuthProvider>
@@ -32,13 +33,15 @@ function App() {
           setShowLoginModal={setShowLoginModal}
           showRegisterModal={showRegisterModal}
           setShowRegisterModal={setShowRegisterModal}
+          showProfileModal={showProfileModal}
+          setShowProfileModal={setShowProfileModal}
         />
       </BrowserRouter>
     </AuthProvider>
   );
 }
 
-function AppRoutes({ searchTerm, setSearchTerm, showLoginModal, setShowLoginModal, showRegisterModal, setShowRegisterModal }) {
+function AppRoutes({ searchTerm, setSearchTerm, showLoginModal, setShowLoginModal, showRegisterModal, setShowRegisterModal, showProfileModal, setShowProfileModal }) {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,7 +63,7 @@ function AppRoutes({ searchTerm, setSearchTerm, showLoginModal, setShowLoginModa
         onSearchChange={setSearchTerm}
         onSearchSubmit={handleSearchSubmit}
         onLoginClick={() => setShowLoginModal(true)}
-        onRegisterClick={() => setShowRegisterModal(true)}
+        onProfileClick={() => setShowProfileModal(true)}
       />
       <SearchBar
         searchTerm={searchTerm}
@@ -85,6 +88,9 @@ function AppRoutes({ searchTerm, setSearchTerm, showLoginModal, setShowLoginModa
       )}
       {showRegisterModal && (
         <Register onClose={() => setShowRegisterModal(false)} onSwitchToLogin={() => { setShowRegisterModal(false); setShowLoginModal(true); }} />
+      )}
+      {showProfileModal && (
+        <Profile onClose={() => setShowProfileModal(false)} />
       )}
     </>
   );

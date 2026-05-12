@@ -1,6 +1,4 @@
-import React from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 const Register = ({ onClose = () => {}, onSwitchToLogin = () => {} }) => {
@@ -9,40 +7,48 @@ const Register = ({ onClose = () => {}, onSwitchToLogin = () => {} }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { register } = useAuth();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+
+    const cleanEmail = email.trim();
+    const cleanUsername = username.trim();
+
     setError('');
 
-    if (!username.trim()) {
+    if (!cleanUsername) {
       setError('Debes ingresar un nombre de usuario.');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden.');
+      setError('Las contrasenas no coinciden.');
       return;
     }
 
+    setLoading(true);
+
     try {
-      await register(email, password, username);
+      await register(cleanEmail, password, cleanUsername);
       onClose();
-      navigate('/');
     } catch (err) {
       if (err.code === 'auth/email-already-in-use') {
-        setError('El correo ya está registrado.');
+        setError('El correo ya esta registrado.');
       } else if (err.code === 'auth/invalid-email') {
-        setError('El correo no es válido.');
+        setError('El correo no es valido.');
       } else if (err.code === 'auth/weak-password') {
-        setError('La contraseña debe tener al menos 6 caracteres.');
+        setError('La contrasena debe tener al menos 6 caracteres.');
       } else if (err.code === 'auth/username-already-in-use') {
-        setError('El nombre de usuario ya está en uso. Elige otro.');
+        setError('El nombre de usuario ya esta en uso. Elige otro.');
       } else {
         setError('Error al registrar la cuenta.');
       }
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,6 +65,7 @@ const Register = ({ onClose = () => {}, onSwitchToLogin = () => {} }) => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
               required
             />
           </div>
@@ -69,6 +76,7 @@ const Register = ({ onClose = () => {}, onSwitchToLogin = () => {} }) => {
               placeholder="Nombre de usuario"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
               required
             />
           </div>
@@ -76,9 +84,10 @@ const Register = ({ onClose = () => {}, onSwitchToLogin = () => {} }) => {
             <input
               className="auth-input"
               type="password"
-              placeholder="Contraseña"
+              placeholder="Contrasena"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
               required
             />
           </div>
@@ -86,17 +95,20 @@ const Register = ({ onClose = () => {}, onSwitchToLogin = () => {} }) => {
             <input
               className="auth-input"
               type="password"
-              placeholder="Confirmar contraseña"
+              placeholder="Confirmar contrasena"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={loading}
               required
             />
           </div>
-          <button className="auth-button" type="submit">Unirse a Lumina</button>
+          <button className="auth-button" type="submit" disabled={loading}>
+            {loading ? 'Creando cuenta...' : 'Unirse a Lumina'}
+          </button>
           {error && <p className="auth-error">{error}</p>}
         </form>
-        <button className="auth-link-button" onClick={onSwitchToLogin}>
-          ¿Ya tienes cuenta? Inicia sesión
+        <button className="auth-link-button" onClick={onSwitchToLogin} disabled={loading}>
+          ¿Ya tienes cuenta? Inicia sesion
         </button>
       </div>
     </div>

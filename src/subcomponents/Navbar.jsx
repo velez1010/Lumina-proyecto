@@ -2,24 +2,23 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-
-export default function Navbar({ searchTerm = '', onSearchChange = () => {}, onSearchSubmit = () => {}, onLoginClick = () => {}, onRegisterClick = () => {} }) {
-  const { currentUser, logout } = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-    }
-  };
+export default function Navbar({
+  searchTerm = '',
+  onSearchChange = () => {},
+  onSearchSubmit = () => {},
+  onLoginClick = () => {},
+  onProfileClick = () => {}
+}) {
+  const { currentUser } = useAuth();
+  const displayName = currentUser?.username || currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Usuario';
+  const displayInitial = displayName.trim()[0]?.toUpperCase() || 'U';
 
   return (
     <nav className="navbar">
       <div className="logo-container">
         <Link to="/">
-        <img src="/images/lumina.png" alt="Lúmina logo" className="logo" />
-        <div className="brand"></div>
+          <img src="/images/lumina.png" alt="Lumina logo" className="logo" />
+          <div className="brand"></div>
         </Link>
       </div>
 
@@ -36,7 +35,7 @@ export default function Navbar({ searchTerm = '', onSearchChange = () => {}, onS
         </button>
       </div>
 
-        <div className="nav-actions">
+      <div className="nav-actions">
         <Link to="/experiencias">
           <button className="btn-primary">Experiencias</button>
         </Link>
@@ -69,18 +68,26 @@ export default function Navbar({ searchTerm = '', onSearchChange = () => {}, onS
       <div className="nav-actions">
         {currentUser ? (
           <div className="user-menu">
-            <button className="btn-primary user-btn">
-              {currentUser.username || currentUser.displayName || currentUser.email?.split('@')[0] || 'Usuario'}
-            </button>
-            <button className="btn-secondary logout-btn" onClick={handleLogout}>
-              Cerrar Sesión
+            <button className="user-profile-trigger" onClick={onProfileClick} type="button" aria-label="Abrir perfil">
+              <span className="user-profile-glow"></span>
+              <span className="user-avatar-shell">
+                {currentUser.photoURL ? (
+                  <img src={currentUser.photoURL} alt="Profile" className="profile-pic-small" />
+                ) : (
+                  <span className="profile-pic-placeholder">{displayInitial}</span>
+                )}
+              </span>
+              <span className="user-profile-copy">
+                <span>Perfil</span>
+                <strong>{displayName}</strong>
+              </span>
+              <span className="user-profile-chevron">&gt;</span>
             </button>
           </div>
         ) : (
-          <button className="btn-primary" onClick={onLoginClick}>Iniciar Sesión</button>
+          <button className="btn-primary" onClick={onLoginClick}>Iniciar Sesion</button>
         )}
       </div>
     </nav>
   );
 }
-
